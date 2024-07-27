@@ -1,0 +1,38 @@
+class Quiz:
+    def __init__(self, questions):
+        self.questions = questions
+        self.score = 0
+
+    def display_question(self, question_num):
+        question, options, answer = self.questions[question_num]
+        print(f"\nQuestion {question_num + 1}: {question}")
+        for i, option in enumerate(options):
+            print(f"{i + 1}. {option}")
+        user_answer = input("Your answer: ")
+        return int(user_answer) - 1, answer
+
+    def check_answer(self, user_answer, correct_answer):
+        if user_answer == correct_answer:
+            print("Correct!")
+            self.score += 1
+        else:
+            print("Incorrect. The correct answer is:", correct_answer + 1)
+
+    def run_quiz(self):
+        print("Welcome to the Quiz Game!")
+        for i in range(len(self.questions)):
+            user_answer, correct_answer = self.display_question(i)
+            self.check_answer(user_answer, correct_answer)
+        print("\nQuiz completed!")
+        print("Your final score is:", self.score)
+
+
+if __name__ == "__main__":
+    questions = [
+        ("What is the capital of France?", ["London", "Paris", "Berlin"], 1),
+        ("Which planet is known as the Red Planet?", ["Mars", "Jupiter", "Venus"], 0),
+        ("What is the largest mammal?", ["Elephant", "Whale", "Giraffe"], 1)
+    ]
+
+    quiz = Quiz(questions)
+    quiz.run_quiz()
