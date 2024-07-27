@@ -1,0 +1,61 @@
+import json
+from datetime import datetime
+
+# Function to get user input for daily expenses
+def get_expense_input():
+    amount = float(input("Enter the amount spent: "))
+    description = input("Enter a brief description: ")
+    category = input("Enter the category (e.g., food, transportation, entertainment): ")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return {'amount': amount, 'description': description, 'category': category, 'timestamp': timestamp}
+
+# Function to save expenses to a JSON file
+def save_expenses(expenses):
+    with open('expenses.json', 'w') as f:
+        json.dump(expenses, f)
+
+# Function to load expenses from a JSON file
+def load_expenses():
+    try:
+        with open('expenses.json', 'r') as f:
+            expenses = json.load(f)
+    except FileNotFoundError:
+        expenses = []
+    return expenses
+
+# Function to display monthly summaries
+def monthly_summary(expenses):
+    # Calculate total spending for each month
+    monthly_totals = {}
+    for expense in expenses:
+        month_year = expense['timestamp'][:7]  # Extract YYYY-MM from timestamp
+        if month_year in monthly_totals:
+            monthly_totals[month_year] += expense['amount']
+        else:
+            monthly_totals[month_year] = expense['amount']
+    
+    # Display monthly summaries
+    for month_year, total in monthly_totals.items():
+        print(f"Total expenses for {month_year}: ${total:.2f}")
+
+# Main function
+def main():
+    expenses = load_expenses()
+    while True:
+        print("\n1. Add Expense\n2. View Monthly Summary\n3. Exit")
+        choice = input("Enter your choice: ")
+        if choice == '1':
+            expense = get_expense_input()
+            expenses.append(expense)
+            save_expenses(expenses)
+            print("Expense added successfully!")
+        elif choice == '2':
+            monthly_summary(expenses)
+        elif choice == '3':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
